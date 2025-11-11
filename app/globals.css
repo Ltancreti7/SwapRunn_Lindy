@@ -1,26 +1,458 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700&family=Inter:wght@400;500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   ROOT VARIABLES & THEME
+   ============================================ */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* SwapRunn Brand Colors */
+  --color-primary: #E50914;
+  --color-primary-light: #FF4B2B;
+  --color-black: #111111;
+  --color-gray: #1A1A1A;
+  --color-silver: #D1D1D1;
+  --color-off-white: #F8F8F8;
+  --color-charcoal: #2A2A2A;
+  
+  /* Semantic Colors */
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #3B82F6;
+  
+  /* Spacing */
+  --spacing-section: 80px;
+  --spacing-section-sm: 40px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+* {
+  @apply border-gray-200 outline-offset-2;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply bg-swaprunn-off-white text-swaprunn-black font-inter;
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+
+h1, h2, h3, h4, h5, h6 {
+  @apply font-poppins font-bold tracking-tight;
+}
+
+h1 {
+  @apply text-5xl md:text-6xl leading-tight;
+}
+
+h2 {
+  @apply text-4xl md:text-5xl leading-tight;
+}
+
+h3 {
+  @apply text-3xl md:text-4xl leading-snug;
+}
+
+h4 {
+  @apply text-2xl md:text-3xl leading-snug;
+}
+
+h5 {
+  @apply text-xl md:text-2xl leading-snug;
+}
+
+h6 {
+  @apply text-lg md:text-xl leading-snug;
+}
+
+p {
+  @apply text-base leading-relaxed text-gray-700;
+}
+
+.text-subtitle {
+  @apply text-lg md:text-xl text-gray-600 font-work-sans;
+}
+
+.text-caption {
+  @apply text-sm text-gray-500 font-inter;
+}
+
+/* ============================================
+   BUTTONS & INTERACTIONS
+   ============================================ */
+
+.btn-primary {
+  @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-red text-white font-poppins font-bold text-sm uppercase tracking-wide rounded-xl transition-all duration-300 hover:shadow-glow hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.btn-primary-outline {
+  @apply inline-flex items-center justify-center gap-2 px-6 py-3 border-2 border-swaprunn-red text-swaprunn-red font-poppins font-bold text-sm uppercase tracking-wide rounded-xl transition-all duration-300 hover:bg-swaprunn-red hover:text-white active:scale-95 disabled:opacity-50;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-swaprunn-off-white text-swaprunn-black border border-gray-300 font-poppins font-bold text-sm uppercase tracking-wide rounded-xl transition-all duration-300 hover:bg-gray-100 active:scale-95 disabled:opacity-50;
+}
+
+.btn-ghost {
+  @apply inline-flex items-center justify-center gap-2 px-4 py-2 text-swaprunn-black font-poppins font-semibold text-sm transition-all duration-300 hover:text-swaprunn-red hover:bg-swaprunn-red/5 rounded-lg;
+}
+
+.btn-sm {
+  @apply px-4 py-2 text-xs;
+}
+
+.btn-lg {
+  @apply px-8 py-4 text-base;
+}
+
+/* ============================================
+   CARDS & CONTAINERS
+   ============================================ */
+
+.card {
+  @apply bg-white rounded-2xl shadow-card p-6 transition-all duration-300;
+}
+
+.card-hover {
+  @apply card hover:shadow-card-hover hover:scale-105 cursor-pointer;
+}
+
+.card-elevated {
+  @apply bg-white rounded-2xl shadow-elevated p-6 border border-gray-100;
+}
+
+.card-glass {
+  @apply bg-white/80 backdrop-blur-md rounded-2xl shadow-card border border-white/20 p-6;
+}
+
+.container-section {
+  @apply max-w-7xl mx-auto px-4 md:px-6 lg:px-8;
+}
+
+/* ============================================
+   BADGES & STATUS
+   ============================================ */
+
+.badge {
+  @apply inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold;
+}
+
+.badge-primary {
+  @apply badge bg-swaprunn-red/10 text-swaprunn-red;
+}
+
+.badge-success {
+  @apply badge bg-green-100 text-green-700;
+}
+
+.badge-warning {
+  @apply badge bg-yellow-100 text-yellow-700;
+}
+
+.badge-error {
+  @apply badge bg-red-100 text-red-700;
+}
+
+.badge-info {
+  @apply badge bg-blue-100 text-blue-700;
+}
+
+.badge-neutral {
+  @apply badge bg-gray-100 text-gray-700;
+}
+
+.status-dot {
+  @apply inline-block w-2 h-2 rounded-full;
+}
+
+.status-available {
+  @apply status-dot bg-green-500;
+}
+
+.status-busy {
+  @apply status-dot bg-yellow-500;
+}
+
+.status-offline {
+  @apply status-dot bg-gray-400;
+}
+
+/* ============================================
+   FORMS & INPUTS
+   ============================================ */
+
+input, textarea, select {
+  @apply w-full px-4 py-3 rounded-lg border border-gray-300 bg-white text-swaprunn-black font-inter transition-all duration-300;
+}
+
+input:focus, textarea:focus, select:focus {
+  @apply outline-none border-swaprunn-red shadow-focus;
+}
+
+input::placeholder, textarea::placeholder {
+  @apply text-gray-400;
+}
+
+label {
+  @apply block text-sm font-semibold text-swaprunn-black mb-2;
+}
+
+.form-group {
+  @apply mb-6;
+}
+
+.form-error {
+  @apply text-red-600 text-sm mt-1;
+}
+
+.form-hint {
+  @apply text-gray-500 text-sm mt-1;
+}
+
+/* ============================================
+   NAVIGATION & LAYOUT
+   ============================================ */
+
+.navbar {
+  @apply sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm;
+}
+
+.navbar-content {
+  @apply container-section flex items-center justify-between h-20;
+}
+
+.nav-link {
+  @apply text-swaprunn-black font-semibold text-sm transition-colors duration-300 hover:text-swaprunn-red;
+}
+
+.nav-link.active {
+  @apply text-swaprunn-red border-b-2 border-swaprunn-red;
+}
+
+.sidebar {
+  @apply fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 shadow-lg z-40 transform transition-transform duration-300;
+}
+
+.sidebar.open {
+  @apply translate-x-0;
+}
+
+.sidebar.closed {
+  @apply -translate-x-full;
+}
+
+.footer {
+  @apply bg-swaprunn-off-white border-t-4 border-swaprunn-red mt-section;
+}
+
+.footer-content {
+  @apply container-section py-12;
+}
+
+/* ============================================
+   SECTION DIVIDERS
+   ============================================ */
+
+.section-divider {
+  @apply relative h-20 bg-gradient-to-b from-transparent to-swaprunn-off-white;
+}
+
+.section-divider-wave {
+  @apply relative h-32 bg-white;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 1200 120' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,50 Q300,0 600,50 T1200,50 L1200,120 L0,120 Z' fill='%23F8F8F8'/%3E%3C/svg%3E");
+  background-size: cover;
+  background-position: center;
+}
+
+/* ============================================
+   ANIMATIONS & TRANSITIONS
+   ============================================ */
+
+.animate-fade-in {
+  @apply animate-fade-in;
+}
+
+.animate-slide-up {
+  @apply animate-slide-up;
+}
+
+.animate-slide-down {
+  @apply animate-slide-down;
+}
+
+.animate-scale-in {
+  @apply animate-scale-in;
+}
+
+.animate-pulse-glow {
+  @apply animate-pulse-glow;
+}
+
+.transition-smooth {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.gradient-red {
+  @apply bg-gradient-red;
+}
+
+.gradient-dark {
+  @apply bg-gradient-dark;
+}
+
+.text-gradient {
+  @apply bg-gradient-red bg-clip-text text-transparent;
+}
+
+.shadow-glow {
+  @apply shadow-glow;
+}
+
+.blur-glass {
+  @apply backdrop-blur-md bg-white/80;
+}
+
+.divider {
+  @apply h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent;
+}
+
+.container-max {
+  @apply max-w-7xl mx-auto;
+}
+
+.flex-center {
+  @apply flex items-center justify-center;
+}
+
+.flex-between {
+  @apply flex items-center justify-between;
+}
+
+.grid-auto {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+}
+
+/* ============================================
+   RESPONSIVE UTILITIES
+   ============================================ */
+
+@media (max-width: 768px) {
+  h1 {
+    @apply text-3xl;
+  }
+  
+  h2 {
+    @apply text-2xl;
+  }
+  
+  h3 {
+    @apply text-xl;
+  }
+  
+  .container-section {
+    @apply px-4;
+  }
+}
+
+/* ============================================
+   DARK MODE (Optional)
+   ============================================ */
+
+.dark {
+  @apply bg-swaprunn-black text-white;
+}
+
+.dark .card {
+  @apply bg-swaprunn-gray border border-swaprunn-charcoal;
+}
+
+.dark input, .dark textarea, .dark select {
+  @apply bg-swaprunn-charcoal border-swaprunn-charcoal text-white;
+}
+
+/* ============================================
+   LOADING & SKELETON
+   ============================================ */
+
+.skeleton {
+  @apply bg-gray-200 rounded-lg animate-pulse;
+}
+
+.skeleton-text {
+  @apply skeleton h-4 w-full mb-2;
+}
+
+.skeleton-avatar {
+  @apply skeleton w-12 h-12 rounded-full;
+}
+
+.loading-spinner {
+  @apply inline-block w-4 h-4 border-2 border-swaprunn-red border-t-transparent rounded-full animate-spin;
+}
+
+/* ============================================
+   TOAST & NOTIFICATIONS
+   ============================================ */
+
+.toast {
+  @apply fixed bottom-4 right-4 bg-white rounded-lg shadow-elevated p-4 flex items-center gap-3 z-50 animate-slide-up;
+}
+
+.toast-success {
+  @apply toast border-l-4 border-green-500;
+}
+
+.toast-error {
+  @apply toast border-l-4 border-red-500;
+}
+
+.toast-warning {
+  @apply toast border-l-4 border-yellow-500;
+}
+
+.toast-info {
+  @apply toast border-l-4 border-blue-500;
+}
+
+/* ============================================
+   SCROLLBAR STYLING
+   ============================================ */
+
+::-webkit-scrollbar {
+  @apply w-2 h-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-400 rounded-full hover:bg-gray-600;
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+  .no-print {
+    @apply hidden;
+  }
 }

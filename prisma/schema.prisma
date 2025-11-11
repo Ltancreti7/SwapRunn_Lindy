@@ -1,0 +1,180 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model - represents all users in the system
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String
+  name          String
+  phone         String?
+  role          UserRole  // ADMIN, DEALERSHIP_ADMIN, SALESPERSON, DRIVER
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  dealershipAdmin Dealership? @relation("DealershipAdmin")
+  salesperson     Salesperson?
+  driver          Driver?
+  sentMessages    Message[]   @relation("SenderMessages")
+  receivedMessages Message[]  @relation("ReceiverMessages")
+
+  @@index([email])
+  @@index([role])
+}
+
+enum UserRole {
+  ADMIN
+  DEALERSHIP_ADMIN
+  SALESPERSON
+  DRIVER
+}
+
+// Dealership model - represents a car dealership organization
+model Dealership {
+  id            String    @id @default(cuid())
+  name          String
+  address       String
+  contactEmail  String
+  phone         String?
+  approved      Boolean   @default(false)
+  adminId       String    @unique
+  admin         User      @relation("DealershipAdmin", fields: [adminId], references: [id], onDelete: Cascade)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  salespeople   Salesperson[]
+  jobs          Job[]
+
+  @@index([approved])
+  @@index([adminId])
+}
+
+// Salesperson model - represents a salesperson at a dealership
+model Salesperson {
+  id            String    @id @default(cuid())
+  userId        String    @unique
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dealershipId  String
+  dealership    Dealership @relation(fields: [dealershipId], references: [id], onDelete: Cascade)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  jobs          Job[]
+
+  @@index([dealershipId])
+  @@index([userId])
+}
+
+// Driver model - represents a freelance driver
+model Driver {
+  id            String    @id @default(cuid())
+  userId        String    @unique
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  licenseNumber String    @unique
+  radiusMiles   Int       // Service radius in miles
+  rating        Float     @default(5.0)
+  verified      Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  jobs          Job[]
+
+  @@index([verified])
+  @@index([userId])
+}
+
+// Job model - represents a delivery or swap request
+model Job {
+  id                String    @id @default(cuid())
+  dealershipId      String
+  dealership        Dealership @relation(fields: [dealershipId], references: [id], onDelete: Cascade)
+  salespersonId     String
+  salesperson       Salesperson @relation(fields: [salespersonId], references: [id], onDelete: Cascade)
+  driverId          String?
+  driver            Driver?   @relation(fields: [driverId], references: [id], onDelete: SetNull)
+  
+  // Job details
+  status            JobStatus @default(OPEN)
+  pickupLocation    String
+  dropoffLocation   String
+  vehicleInfo       String    // Vehicle make, model, year, etc.
+  scheduledAt       DateTime
+  paymentAmount     Decimal   @db.Decimal(10, 2)
+  
+  // Delivery tracking
+  pickupProof       String?   // URL to pickup photo
+  deliveryProof     String?   // URL to delivery photo
+  completedAt       DateTime?
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // Relations
+  messages          Message[]
+  payments          Payment[]
+
+  @@index([dealershipId])
+  @@index([salespersonId])
+  @@index([driverId])
+  @@index([status])
+  @@index([scheduledAt])
+}
+
+enum JobStatus {
+  OPEN
+  ACCEPTED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+// Message model - represents chat between salesperson and driver
+model Message {
+  id            String    @id @default(cuid())
+  jobId         String
+  job           Job       @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  senderId      String
+  sender        User      @relation("SenderMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiverId    String
+  receiver      User      @relation("ReceiverMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+  message       String
+  createdAt     DateTime  @default(now())
+
+  @@index([jobId])
+  @@index([senderId])
+  @@index([receiverId])
+}
+
+// Payment model - represents payment for a completed job
+model Payment {
+  id            String    @id @default(cuid())
+  jobId         String
+  job           Job       @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  amount        Decimal   @db.Decimal(10, 2)
+  status        PaymentStatus @default(PENDING)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([jobId])
+  @@index([status])
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
